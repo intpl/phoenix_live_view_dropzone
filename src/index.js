@@ -49,14 +49,16 @@ export class PhoenixLiveViewDropzone {
 
     this.dataId = this.el.dataset.id;
     this.dataUrl = this.el.dataset.url;
+    this.dataCsrfToken = this.el.dataset.csrfToken
   }
 
   updated() {
     var dataset = this.el.dataset;
-    if (dataset && this.dataId !== dataset.id && this.dataUrl !== dataset.url) {
+    if (dataset && this.dataId !== dataset.id && this.dataUrl !== dataset.url && this.dataCsrfToken !== dataset.csrfToken) {
       this.dataId = dataset.id;
       this.dataUrl = dataset.url;
-      this.app.ports.addUploadUrl.send({id: this.dataId, url: this.dataUrl});
+      this.dataCsrfToken = dataset.csrfToken;
+      this.app.ports.addUploadUrl.send({id: this.dataId, url: this.dataUrl, csrf_token: this.dataCsrfToken});
     }
   }
 }

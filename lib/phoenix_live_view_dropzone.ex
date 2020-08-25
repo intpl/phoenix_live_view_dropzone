@@ -28,6 +28,7 @@ defmodule PhoenixLiveViewDropzone do
       id="<%= id(assigns) %>"
       data-id="<%= data(assigns)[:id] %>"
       data-url="<%= data(assigns)[:url] %>"
+      data-csrf-token="<%= data(assigns)[:csrf_token] %>"
       phx-update="ignore"
       phx-hook="<%= hook_name(assigns) %>"
       <%= optional_attributes(assigns) %>
@@ -42,8 +43,8 @@ defmodule PhoenixLiveViewDropzone do
   defp css_class(%{css_class: css_class}) when is_binary(css_class), do: css_class
   defp css_class(_), do: @default_name
 
-  defp data(%{file_data: %{id: id, url: url}}), do: %{id: id, url: url}
-  defp data(_), do: %{id: "", url: ""}
+  defp data(%{file_data: %{id: id, url: url, csrf_token: csrf_token}}), do: %{id: id, url: url, csrf_token: csrf_token}
+  defp data(_), do: %{id: "", url: "", csrf_token: ""}
 
   defp hook_name(%{hook: name}) when is_binary(name), do: name
   defp hook_name(_), do: "PhoenixLiveViewDropzone"

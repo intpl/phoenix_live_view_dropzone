@@ -40,6 +40,7 @@ type alias Upload =
 type alias UploadTarget =
     { id : UploadId
     , url : String
+    , csrf_token : String
     }
 
 

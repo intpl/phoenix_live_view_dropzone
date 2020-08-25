@@ -6,7 +6,7 @@ import File.Select as Select
 import Html exposing (Attribute, Html, br, button, div, text)
 import Html.Attributes exposing (class, type_)
 import Html.Events exposing (onClick, preventDefaultOn)
-import Http exposing (Progress)
+import Http exposing (Progress, header)
 import Json.Decode as Json exposing (Value)
 import Ports
 import Task exposing (Task)
@@ -87,8 +87,8 @@ subscriptions model =
     Sub.batch ([ urlSub ] ++ Uploads.subscribe model.uploads UploadProgress)
 
 
-startUpload : Upload -> String -> Cmd Msg
-startUpload upload url =
+startUpload : Upload -> String -> String -> Cmd Msg
+startUpload upload url csrf_token =
     let
         handleResponse : Result Http.Error String -> Msg
         handleResponse result =
@@ -101,7 +101,7 @@ startUpload upload url =
     in
     Http.request
         { method = "PUT"
-        , headers = []
+        , headers = [header "x-csrf-token" csrf_token]
         , url = url
         , body = Http.fileBody upload.file
         , expect = Http.expectString handleResponse
@@ -151,7 +151,7 @@ update msg model =
         UrlGenerated target ->
             case Uploads.get model.uploads target.id of
                 Just upload ->
-                    ( model, startUpload upload target.url )
+                    ( model, startUpload upload target.url target.csrf_token )
 
                 _ ->
                     ( model, Cmd.none )
